@@ -7,11 +7,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {  DrawerItemList } from "@react-navigation/drawer";
-
+import { Entypo } from '@expo/vector-icons';
 import Home from './Pages/Home/Home';
 import Color from "./Pages/Shared/Color";
 import ReadNews from './Pages/Home/ReadNews';
-
+import { Feather } from '@expo/vector-icons';
+ import { FontAwesome5 } from '@expo/vector-icons';
 const Drawer = createDrawerNavigator();
 
 const Stack = createNativeStackNavigator();
@@ -19,18 +20,18 @@ const Stack = createNativeStackNavigator();
 
 const CloseButton = ({ navigation }) => (
   <TouchableOpacity
-  style={{ marginRight: 16 }}
+  style={{ marginLeft: 225 }}
     onPress={() => navigation.closeDrawer()}
   >
-    <Text style={{color:Color.gray,fontSize: 20 }}>X</Text>
+    <Text style={{color:Color.white,fontSize: 20 }}>X</Text>
   </TouchableOpacity>
 );
 
 const CustomDrawerContent = (props) => {
   return (
-    <DrawerContentScrollView {...props} style={{flexDirection:"row",margin:10}} >
+    <DrawerContentScrollView {...props} style={{flexDirection:"row",backgroundColor:Color.black}} >
        <View style={styles.drawerContent}>
-      <DrawerItemList {...props} />
+      <DrawerItemList {...props} style={{color:"white"}} />
           <CloseButton navigation={props.navigation} />
        </View>
        
@@ -67,28 +68,50 @@ const CustomHeader = ({ title, navigation,props }) => {
 const AppDrawer = () => {
   return (
 
-    <Drawer.Navigator style={{flexDirection:"vertical",padding:20,marginRight:10,marginLeft:10}}
-    drawerContent={(props) => <CustomDrawerContent {...props} />}
+    <Drawer.Navigator style={{flexDirection:"column",padding:20}}
+    drawerContent={(props) => <CustomDrawerContent {...props} style={{backgroundColor:Color.black }}/>}
       screenOptions={{
         header: ({ route, navigation }) => (
           <CustomHeader title={route.name} navigation={navigation} />
         ),
+        drawerLabelStyle: { color: Color.white },
       }}
     >
-   
-      <Drawer.Screen  name="Home" component={Home} />
-      <Drawer.Screen  name="ReadNews" component={ReadNews} />
-      {/* <Drawer.Screen name="MainCategories" component={MainCategories} /> */}
 
+
+{/* <Drawer.Screen     name="FakeNews" component={Home} options={{
  
+          drawerIcon: ({ color, size }) => (
+            <Entypo name="news" size={24} color="white" />
+          ),
+        }} /> */}
 
-    </Drawer.Navigator>
-  );
+
+<Drawer.Screen name="ReadNews" component={ReadNews}  options={{
+    drawerIcon: ({ color, size }) => (
+      <Entypo name="news" size={size} color="white" />
+    ),
+  }} />
+
+      <Drawer.Screen  options={{
+          drawerIcon: ({ color, size }) => (
+            <Feather name="news" size={24} color="white" />
+          ),
+        }}  name="Home" component={Home} />
+
+
+</Drawer.Navigator>
+);
 };
+
+
+
 
 const styles = StyleSheet.create({
   drawerContent: {
-    flexDirection: 'row',
+    // flexDirection: 'column',
+    flexDirection:"column-reverse",
+   
   },
   header: {
     flexDirection: 'row',
@@ -101,6 +124,8 @@ const styles = StyleSheet.create({
   titleContainer: {
      flex: 1,
     alignItems: 'center',
+    alignSelf:'center',
+    justifyContent:'center'
     
   },
   title: {
@@ -117,15 +142,42 @@ const styles = StyleSheet.create({
     backgroundColor:Color.black,
     flexDirection:"row",
 
-  }
+  },
+
 });
 
 const App = () => {
   return (
     <NavigationContainer >
-      <AppDrawer />
+      <AppDrawer  style={{backgroundColor:Color.black}}/>
     </NavigationContainer>
   );
 };
 
+
 export default App;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
