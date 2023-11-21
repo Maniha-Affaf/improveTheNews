@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Machine",
-    "slug": "Machine",
+    "name": "BLOGApp",
+    "slug": "BLOGApp",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
     ]
   },
-  "name": "Machine"
+  "name": "BLOGAPP"
 }
