@@ -34,7 +34,7 @@ function ReadNews() {
         {news.title}
       </Text>
       <Text style={{ marginTop: 5,fontSize:16, color: Color.lightGray,lineHeight:30 }}>{news.description}</Text>
-      <Text style={{marginTop:10,color:Color.orange,fontSize:16, fontWeight:"bold",paddingBottom:20,paddingTop:5}}>Read More</Text>
+      <Text style={{marginTop:10,color:Color.orange,fontSize:16, fontWeight:"bold",paddingBottom:20,paddingTop:5}}   onPress={news.url}>Read More</Text>
     </View> 
       </View>
   );

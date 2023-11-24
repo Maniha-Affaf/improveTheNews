@@ -13,6 +13,7 @@ import Color from "./Pages/Shared/Color";
 import ReadNews from './Pages/Home/ReadNews';
 import { Feather } from '@expo/vector-icons';
  import { FontAwesome5 } from '@expo/vector-icons';
+import { CategoryProvider, useCategory } from './Pages/Home/CategoryContext';
 const Drawer = createDrawerNavigator();
 
 const Stack = createNativeStackNavigator();
@@ -27,27 +28,12 @@ const CloseButton = ({ navigation }) => (
   </TouchableOpacity>
 );
 
-const CustomDrawerContent = (props) => {
-  return (
-    <DrawerContentScrollView {...props} style={{flexDirection:"row",backgroundColor:Color.black}} >
-       <View style={styles.drawerContent}>
-      <DrawerItemList {...props} style={{color:"white"}} />
-          <CloseButton navigation={props.navigation} />
-       </View>
-       
-      {/* <DrawerItem label="HomeScreen" onPress={() => props.navigation.navigate('Home')} /> */}
-      {/* <DrawerItem label="Main Categories" onPress={() => props.navigation.navigate('MainCategories')} /> */}
-    </DrawerContentScrollView>
-  );
-};
+
 
 const CustomHeader = ({ title, navigation,props }) => {
   return (
     <View style={styles.header} >
       <DrawerContentScrollView {...props}>
-      {/* <TouchableOpacity onPress={() => props.navigation.closeDrawer()}>
-        <MaterialCommunityIcons name="close" size={24} color="black" />
-      </TouchableOpacity> */}
       <View style={styles.container} horizontal={true}> 
       <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
         <MaterialCommunityIcons name="menu" size={24} color="white" />
@@ -65,11 +51,51 @@ const CustomHeader = ({ title, navigation,props }) => {
   );
 };
 
+const onPressItem = (subcontent,navigation) => {
+  // Navigate to the home screen and pass the subcontent
+  navigation.navigate('Home', { subcontent });
+};
+
+
+const CustomDrawerContent = ({navigation, ...props}) => {
+  const { selectedCategoryData } = useCategory(); // Use the useCategory hook to access the selected category data
+
+  return (
+    <DrawerContentScrollView {...props} style={{ flexDirection: "row", backgroundColor: Color.black }} >
+      <View style={styles.drawerContent}>
+        <CloseButton navigation={props.navigation} />
+
+        {/* Render selected category data if available */}
+        {selectedCategoryData && (
+          <View style={{ marginTop: 20 }}>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', color: Color.orange }}>
+              {selectedCategoryData.title}
+            </Text>
+            {selectedCategoryData.map((item, index) => (
+              <TouchableOpacity  key={index} onPress={() => onPressItem(item.subcontent,navigation)}>
+
+              <Text key={index} style={{ fontSize: 12,fontWeight:"bold",paddingLeft:"25%",paddingBottom:20, color: Color.white }}>{item.content}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+
+        {/* Render other drawer items */}
+        <DrawerItemList {...props} style={{ color: "white" }} />
+      </View>
+    </DrawerContentScrollView>
+  );
+};
+
+
+
+
+
 const AppDrawer = () => {
   return (
 
     <Drawer.Navigator style={{flexDirection:"column",padding:20}}
-    drawerContent={(props) => <CustomDrawerContent {...props} style={{backgroundColor:Color.black }}/>}
+    drawerContent={(props) => <CustomDrawerContent {...props}  navigation={props.navigation} style={{backgroundColor:Color.black }}/>}
       screenOptions={{
         header: ({ route, navigation }) => (
           <CustomHeader title={route.name} navigation={navigation} />
@@ -79,26 +105,18 @@ const AppDrawer = () => {
     >
 
 
-{/* <Drawer.Screen     name="FakeNews" component={Home} options={{
- 
-          drawerIcon: ({ color, size }) => (
-            <Entypo name="news" size={24} color="white" />
-          ),
-        }} /> */}
-
+<Drawer.Screen  options={{
+    drawerIcon: ({ color, size }) => (
+      <Feather name="news" size={24} color="white" />
+    ),
+  }}  name="Home" component={Home} />
 
 <Drawer.Screen name="ReadNews" component={ReadNews}  options={{
     drawerIcon: ({ color, size }) => (
       <Entypo name="news" size={size} color="white" />
     ),
   }} />
-
-      <Drawer.Screen  options={{
-          drawerIcon: ({ color, size }) => (
-            <Feather name="news" size={24} color="white" />
-          ),
-        }}  name="Home" component={Home} />
-
+  
 
 </Drawer.Navigator>
 );
@@ -106,11 +124,10 @@ const AppDrawer = () => {
 
 
 
-
 const styles = StyleSheet.create({
   drawerContent: {
-    // flexDirection: 'column',
-    flexDirection:"column-reverse",
+    flexDirection: 'column',
+    // flexDirection:"column-reverse",
    
   },
   header: {
@@ -119,7 +136,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: Color.lightGray, // Replace with your desired color
+    borderBottomColor: Color.lightGray, 
   },
   titleContainer: {
      flex: 1,
@@ -148,9 +165,11 @@ const styles = StyleSheet.create({
 
 const App = () => {
   return (
+    <CategoryProvider>
     <NavigationContainer >
       <AppDrawer  style={{backgroundColor:Color.black}}/>
     </NavigationContainer>
+    </CategoryProvider>
   );
 };
 

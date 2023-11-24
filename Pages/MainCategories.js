@@ -1,10 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-
-
-
-// const Drawer = createDrawerNavigator();
 const MainCategories = ({ navigation }) => {
   // Dummy data for main categories (replace with API call later)
   const mainCategories = [
