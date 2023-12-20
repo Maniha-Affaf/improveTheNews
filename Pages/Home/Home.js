@@ -1,17 +1,15 @@
-
-
-import { View, Text, StyleSheet } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import CategorySlider from './CategorySlider';
-import Color from '../Shared/Color';
-import TopHeadlineSlider from './TopHeadlineSlider';
-import HeadlineList from './HeadlineList';
-import FakeApi from '../Api/FakeApi';
-import { ScrollView } from 'react-native';
+import { View, Text, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import CategorySlider from "./CategorySlider";
+import Color from "../Shared/Color";
+import TopHeadlineSlider from "./TopHeadlineSlider";
+import HeadlineList from "./HeadlineList";
+import FakeApi from "../Api/FakeApi";
+import { ScrollView } from "react-native";
 
 export default function Home({ route }) {
   const [blogList, setBlogList] = useState([]);
-  const [subcontent, setSubcontent] = useState('');
+  const [subcontent, setSubcontent] = useState("");
 
   useEffect(() => {
     getTopHeadline();
@@ -21,11 +19,11 @@ export default function Home({ route }) {
     // Access the subcontent parameter from the route
     const { subcontent } = route.params || {};
     if (subcontent) {
-      console.log('Subcontent:', subcontent);
-      // Handle the subcontent as needed
+      console.log("Subcontent:", subcontent);
+
       setSubcontent(subcontent); // Set subcontent to the state variable
     }
-    console.log('nohome');
+    console.log("nohome");
   }, [route.params]);
 
   const getTopHeadline = () => {
@@ -33,18 +31,19 @@ export default function Home({ route }) {
       .then((result) => {
         if (result && result.articles) {
           setBlogList(result.articles);
+          console.log("Bloglist", blogList);
         } else {
-          console.error('Error fetching data: Invalid response format');
+          console.error("Error fetching data: Invalid response format");
         }
       })
       .catch((error) => {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       });
   };
 
   return (
     <ScrollView style={styles.HomeName}>
-      <Text style={{color:Color.white ,fontSize:16}}> {subcontent}</Text>
+      <Text style={{ color: Color.white, fontSize: 16 }}> {subcontent}</Text>
       <CategorySlider />
       <TopHeadlineSlider blogList={blogList} />
       <HeadlineList blogList={blogList} />
