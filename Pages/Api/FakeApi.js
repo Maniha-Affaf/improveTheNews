@@ -11,7 +11,7 @@ const getTopHeadline = async () => {
   try {
     const response = await api.get("/everything", {
       q: "tesla",
-      from: "2023-12-20",
+      from: "2024-01-10",
       sortBy: "publishedAt",
       apiKey: apiKey,
     });

@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -9,6 +7,8 @@ import {
   StyleSheet,
 } from "react-native";
 import Color from "../Shared/Color";
+import { useWindowDimensions } from "react-native";
+import RenderHtml from "react-native-render-html";
 import { useNavigation } from "@react-navigation/native";
 import { useCategory } from "./CategoryContext";
 
@@ -18,7 +18,7 @@ export default function CategorySlider() {
   const navigation = useNavigation();
   const { setCategoryData: setContextCategoryData } = useCategory();
 
-  useEffect(() => {
+  useEffect(() => {a
     // Fetch parent1, parent2, and HTML data from the API
     fetch("https://v9nebsfxtb.execute-api.us-east-1.amazonaws.com/dev/items")
       .then((response) => response.json())
@@ -28,8 +28,7 @@ export default function CategorySlider() {
           items: [
             {
               content: item.parent2,
-              subcontent: item.html
-          
+              subcontent: item.html,
             },
           ],
         }));
@@ -48,55 +47,56 @@ export default function CategorySlider() {
       categoryData: categoryData[id - 1]?.items || [],
     });
   };
+  const { width } = useWindowDimensions();
 
-  return (
-    <View style={{ marginTop: 10,color:Color.white
-     }}>
-      <FlatList
-        data={categoryData}
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        renderItem={({ item, index }) => (
-          <TouchableOpacity onPress={() => onClickCategoryHandler(index + 1)}>
-            <Text
-              style={
-                
-                index + 1 === active
-                  ? styles.selectedText
-                  : styles.unselectedText
-              }
-            >
-              {item?.title || "Default Title"}{" "}
-            </Text>
-          </TouchableOpacity>
-        )}
-        keyExtractor={(item, index) => index.toString()}
-      />
-
-      {/* Display content based on the selected category */}
-      {active && (
-        <View style={{ marginTop: 20 }}>
+return (
+  <View style={{ marginTop: 10, color: Color.white }}>
+    <FlatList
+      data={categoryData}
+      horizontal={true}
+      showsHorizontalScrollIndicator={false}
+      renderItem={({ item, index }) => (
+        <TouchableOpacity onPress={() => onClickCategoryHandler(index + 1)}>
           <Text
-            style={{ fontSize: 20, fontWeight: "bold", color: Color.orange }}
+            style={
+              index + 1 === active
+                ? styles.selectedText
+                : styles.unselectedText
+            }
           >
-            {categoryData[active - 1]?.title || "Default Title"}{" "}
+            {item?.title || "Default Title"}{" "}
           </Text>
-          {categoryData[active - 1]?.items.map((item, index) => (
-            <View key={index}>
-              <Text style={{ fontSize: 16, color: Color.white }}>
-                {item.content}
-              </Text>
-              <Text style={{ fontSize: 14, color: Color.gray }}>
-                {item.subcontent}
-              </Text>
-             
-            </View>
-          ))}
-        </View>
+        </TouchableOpacity>
       )}
-    </View>
-  );
+      keyExtractor={(item, index) => index.toString()}
+    />
+
+    {/* Display content based on the selected category */}
+    {active && (
+      <View style={{ marginTop: 20 }}>
+        <Text
+          style={{ fontSize: 20, fontWeight: "bold", color: Color.orange }}
+        >
+          {categoryData[active - 1]?.title || "Default Title"}{" "}
+        </Text>
+        {categoryData[active - 1]?.items.map((item, index) => (
+          <View key={index}>
+            <Text style={{ fontSize: 16, color: Color.white }}>
+              {item.content}
+            </Text>
+            <RenderHtml
+              source={{ html: item.subcontent }}
+              contentWidth={width} // Ensure that 'width' is defined and has a valid value
+            />
+          </View>
+        ))}
+      </View>
+    )}
+  </View>
+);
 }
+
+
 
 
 const styles = StyleSheet.create({
@@ -113,3 +113,114 @@ const styles = StyleSheet.create({
     color: Color.orange,
   },
 });
+
+
+
+
+// import React, { useState, useEffect } from "react";
+// import { View, Text, TouchableOpacity, FlatList, StyleSheet } from "react-native";
+// import Color from "../Shared/Color";
+// import { useWindowDimensions } from "react-native";
+// import RenderHtml from "react-native-render-html";
+// import { useNavigation } from "@react-navigation/native";
+// import { useCategory } from "./CategoryContext";
+
+// export default function CategorySlider() {
+//   const [active, setActive] = useState(1);
+//   const [categoryData, setCategoryData] = useState([]);
+//   const navigation = useNavigation();
+//   const { setCategoryData: setContextCategoryData } = useCategory();
+
+//   useEffect(() => {
+//     // Fetch data from the API
+//     fetch("https://v9nebsfxtb.execute-api.us-east-1.amazonaws.com/dev/items")
+//       .then((response) => response.json())
+//       .then((data) => {
+//         // Assuming your data structure has 'parent1', 'parent2', and 'html'
+//         const mappedCategoryData = data.map((item) => ({
+//           title: item.parent1,
+//           items: [
+//             {
+//               content: item.parent2,
+//               subcontent: item.html,
+//             },
+//           ],
+//         }));
+
+//         setCategoryData(mappedCategoryData);
+//         setContextCategoryData(mappedCategoryData[active - 1]?.items || []);
+//       })
+//       .catch((error) => {
+//         console.error("Error fetching category data:", error);
+//       });
+//   }, [active, setContextCategoryData]);
+
+//   const onClickCategoryHandler = (id) => {
+//     setActive(id);
+//     setContextCategoryData(categoryData[id - 1]?.items || []);
+//     navigation.navigate("CategoryDetail", {
+//       categoryData: categoryData[id - 1]?.items || [],
+//     });
+//   };
+
+//   const { width } = useWindowDimensions();
+
+//   return (
+//     <View style={{ marginTop: 10, color: Color.white }}>
+//       <FlatList
+//         data={categoryData}
+//         horizontal={true}
+//         showsHorizontalScrollIndicator={false}
+//         renderItem={({ item, index }) => (
+//           <TouchableOpacity onPress={() => onClickCategoryHandler(index + 1)}>
+//             <Text
+//               style={
+//                 index + 1 === active
+//                   ? styles.selectedText
+//                   : styles.unselectedText
+//               }
+//             >
+//               {item?.title || "Default Title"}{" "}
+//             </Text>
+//           </TouchableOpacity>
+//         )}
+//         keyExtractor={(item, index) => index.toString()}
+//       />
+
+//       {/* Display content based on the selected category */}
+//       {active && (
+//         <View style={{ marginTop: 20 }}>
+//           <Text style={{ fontSize: 20, fontWeight: "bold", color: Color.orange }}>
+//             {categoryData[active - 1]?.title || "Default Title"}{" "}
+//           </Text>
+//           {categoryData[active - 1]?.items.map((item, index) => (
+//             <View key={index}>
+//               <Text style={{ fontSize: 16, color: Color.white }}>
+//                 {item.content}
+//               </Text>
+//               <RenderHtml
+//                 source={{ html: item.subcontent }}
+//                 contentWidth={width} // Ensure that 'width' is defined and has a valid value
+//               />
+//             </View>
+//           ))}
+//         </View>
+//       )}
+//     </View>
+//   );
+// }
+
+// const styles = StyleSheet.create({
+//   unselectedText: {
+//     marginRight: 15,
+//     fontSize: 17,
+//     fontWeight: "700",
+//     color: Color.white,
+//   },
+//   selectedText: {
+//     marginRight: 15,
+//     fontSize: 17,
+//     fontWeight: "800",
+//     color: Color.orange,
+//   },
+// });
